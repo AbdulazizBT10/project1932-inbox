@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1932 PROJECT — Inbox Chief of Staff</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#E85C2C; --orange2:#ff7040; --orange-bg:rgba(232,92,44,0.07); --orange-brd:rgba(232,92,44,0.2);
+  --navy:#1B2D4F; --navy2:#243d6a;
+  --blue:#4A9BC4; --blue-bg:rgba(74,155,196,0.08); --blue-brd:rgba(74,155,196,0.2);
+  --bg:#f0f4f8; --bg2:#e6eef6; --surface:#fff; --surface2:#f7f9fc;
+  --border:#dce6f0; --border2:#c8d8e8;
+  --text:#1B2D4F; --text2:#4a6580; --text3:#8fa8c0;
+  --shadow:0 1px 4px rgba(27,45,79,0.08),0 4px 12px rgba(27,45,79,0.04);
+  --shadow2:0 2px 8px rgba(27,45,79,0.12),0 8px 24px rgba(27,45,79,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* AUTH */
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8f0f8 0%,#f5f8fc 50%,#fdf2ec 100%)}
+.auth-card{background:var(--surface);border-radius:20px;padding:44px;width:100%;max-width:460px;box-shadow:var(--shadow2);border:1px solid var(--border)}
+.brand-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.brand-num{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;color:var(--navy);letter-spacing:.12em}
+.brand-word{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--text3);text-transform:uppercase}
+.brand-bar{width:36px;height:2px;background:var(--orange);margin-bottom:20px}
+.auth-title{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.auth-title span{color:var(--orange)}
+.auth-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:28px}
+.auth-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.auth-step{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-family:'DM Mono',monospace;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-txt{font-size:12px;color:var(--text2);line-height:1.5}
+.step-txt strong{color:var(--text);font-weight:600}
+.step-txt code{font-family:'DM Mono',monospace;font-size:11px;background:var(--bg2);border:1px solid var(--border2);padding:1px 5px;border-radius:3px;color:var(--orange)}
+.auth-input{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;padding:11px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:10px}
+.auth-input:focus{border-color:var(--orange)}
+.auth-input::placeholder{color:var(--text3)}
+.btn-main{width:100%;background:var(--orange);color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-main:hover{background:var(--orange2);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,92,44,.3)}
+.auth-note{margin-top:14px;font-size:11px;color:var(--text3);text-align:center;line-height:1.5}
+
+/* SETUP */
+#setup-screen{display:none;min-height:100vh;align-items:center;justify-content:center;background:var(--bg)}
+.setup-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;width:100%;max-width:540px;box-shadow:var(--shadow2)}
+.setup-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.setup-desc{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.5}
+.label-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.label-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px}
+.label-row-l{display:flex;align-items:center;gap:10px}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lname{font-size:12px;font-weight:500;color:var(--text)}
+.lcount{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.lstatus{font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px}
+.ls-p{background:#fff7ed;color:var(--orange);border:1px solid var(--orange-brd)}
+.ls-c{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd)}
+.ls-d{background:#f0faf5;color:#2e9e6a;border:1px solid rgba(46,158,106,.2)}
+.progress-wrap{background:var(--border);border-radius:4px;height:4px;margin-bottom:6px;overflow:hidden}
+.progress-fill{height:100%;background:var(--orange);border-radius:4px;width:0;transition:width .3s}
+.progress-lbl{font-size:12px;color:var(--text2);margin-bottom:14px}
+.btn-navy{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-navy:hover{background:var(--navy2)}
+.btn-navy:disabled{opacity:.4;cursor:not-allowed}
+
+/* APP SHELL */
+#app{display:none;height:100vh;flex-direction:column}
+.topbar{height:50px;background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0}
+.tb-num{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#fff;letter-spacing:.12em}
+.tb-word{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.25em;color:rgba(255,255,255,.45)}
+.tb-div{width:1px;height:18px;background:rgba(255,255,255,.15)}
+.tb-title{font-size:12px;color:rgba(255,255,255,.55)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-email{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.45)}
+.tb-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:5px 10px;color:rgba(255,255,255,.65);font-size:11px;cursor:pointer;transition:all .15s}
+.tb-btn:hover{background:rgba(255,255,255,.18);color:#fff}
+
+.tabbar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;flex-shrink:0;gap:2px;overflow-x:auto}
+.tab{padding:11px 14px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.tbadge{background:var(--orange);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-family:'DM Mono',monospace}
+.tbadge.grey{background:var(--text3)}
+
+.main-layout{display:flex;flex:1;overflow:hidden}
+
+/* DASHBOARD */
+#tab-dash{flex:1;overflow-y:auto;padding:24px}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.stat-card.urg{border-left:3px solid var(--orange)}
+.stat-card.inf{border-left:3px solid var(--blue)}
+.stat-lbl{font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.stat-val{font-size:30px;font-weight:700;color:var(--navy);font-family:'DM Mono',monospace;line-height:1}
+.stat-val.o{color:var(--orange)}
+.stat-val.b{color:var(--blue)}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+.dash-sec{margin-bottom:28px}
+.dash-sec-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.dash-sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.cat-card:hover{border-color:var(--border2);box-shadow:var(--shadow2);transform:translateY(-1px)}
+.cdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-info{flex:1}
+.cat-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cat-desc{font-size:11px;color:var(--text2)}
+.cat-cnt{font-family:'DM Mono',monospace;font-size:18px;font-weight:500}
+.qa-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* INBOX */
+#tab-inbox{display:none;flex:1;overflow:hidden}
+.sidebar{width:195px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.sb-head{padding:12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-search{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text);outline:none;transition:border-color .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.sb-search:focus{border-color:var(--blue)}
+.sb-nav{flex:1;overflow-y:auto;padding:8px}
+.nav-sec-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:8px 6px 4px}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:7px 8px;border-radius:7px;cursor:pointer;transition:background .1s;margin-bottom:1px}
+.nav-item:hover{background:var(--surface2)}
+.nav-item.active{background:var(--orange-bg)}
+.nav-item-l{display:flex;align-items:center;gap:7px}
+.ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nname{font-size:12px;color:var(--text2);font-weight:500}
+.nav-item.active .nname{color:var(--orange)}
+.nbadge{font-family:'DM Mono',monospace;font-size:10px;background:var(--bg2);color:var(--text3);border-radius:8px;padding:1px 6px}
+.nav-item.active .nbadge{background:var(--orange-bg);color:var(--orange)}
+.sb-actions{padding:8px;border-top:1px solid var(--border);flex-shrink:0}
+.sb-btn{display:flex;align-items:center;gap:7px;width:100%;background:none;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:5px}
+.sb-btn:hover{background:var(--surface2);color:var(--text)}
+.sb-btn.o:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-bg)}
+.sb-btn.b:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+
+.thread-panel{width:330px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface2)}
+.tp-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-shrink:0}
+.tp-title{font-size:12px;font-weight:600;color:var(--text)}
+.tp-cnt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.thread-list{flex:1;overflow-y:auto}
+.ti{padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;background:var(--surface);position:relative}
+.ti:hover{background:var(--bg2)}
+.ti.active{background:#fff7f3;border-left:2px solid var(--orange)}
+.ti.unread .ti-sndr{font-weight:700;color:var(--navy)}
+.ti-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.ti-sndr{font-size:12px;color:var(--text);font-weight:500}
+.ti-dt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.ti-subj{font-size:11px;color:var(--text2);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti-snip{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.ti-tag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600}
+.unread-dot{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--orange)}
+
+.email-view{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
+.ev-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)}
+.ei{font-size:44px;opacity:.25}
+.et{font-size:14px}
+.ev-top{padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ev-subj{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.3}
+.ev-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ev-from{font-size:12px;color:var(--text2)}
+.ev-from strong{color:var(--text)}
+.ev-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.ev-labels{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.elbl{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;cursor:pointer;transition:opacity .15s}
+.elbl:hover{opacity:.7}
+.elbl-add{font-size:10px;color:var(--text3);border:1px dashed var(--border2);border-radius:5px;padding:2px 8px;cursor:pointer;transition:all .15s}
+.elbl-add:hover{border-color:var(--orange);color:var(--orange)}
+.ev-toolbar{display:flex;gap:6px;padding:9px 20px;border-bottom:1px solid var(--border);background:var(--surface2);flex-shrink:0}
+.tbtn{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.tbtn:hover{background:var(--bg2);color:var(--text)}
+.tbtn.o{border-color:var(--orange-brd);color:var(--orange);background:var(--orange-bg)}
+.tbtn.o:hover{background:rgba(232,92,44,.12)}
+.tbtn.b{border-color:var(--blue-brd);color:var(--blue);background:var(--blue-bg)}
+.tbtn.b:hover{background:rgba(74,155,196,.12)}
+.ev-body{flex:1;overflow-y:auto;padding:20px}
+.msg-block{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:12px}
+.msg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.msg-name{font-size:13px;font-weight:600;color:var(--navy)}
+.msg-email{font-size:11px;color:var(--text3)}
+.msg-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-align:right}
+.msg-body{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap}
+.reply-area{border-top:1px solid var(--border);padding:12px 20px;flex-shrink:0;background:var(--surface2)}
+.reply-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.reply-lbl{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
+.reply-textarea{width:100%;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--text);line-height:1.6;resize:none;min-height:95px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color .2s}
+.reply-textarea:focus{border-color:var(--orange)}
+.reply-foot{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.reply-to{font-size:11px;color:var(--text3)}
+.reply-btns{display:flex;gap:8px}
+.btn-send{background:var(--orange);color:#fff;border:none;border-radius:7px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-send:hover{background:var(--orange2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,92,44,.3)}
+.btn-send:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ai{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd);border-radius:7px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-ai:hover{background:rgba(74,155,196,.16)}
+
+/* ESCALATIONS */
+#tab-esc{display:none;flex:1;overflow-y:auto;padding:24px}
+.esc-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.esc-ttl{font-size:18px;font-weight:700;color:var(--navy)}
+.esc-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.esc-list{display:flex;flex-direction:column;gap:10px}
+.esc-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;box-shadow:var(--shadow);cursor:pointer;transition:all .15s}
+.esc-card:hover{box-shadow:var(--shadow2);transform:translateY(-1px)}
+.esc-card.crit{border-left:3px solid var(--orange)}
+.esc-card.high{border-left:3px solid #c9821a}
+.esc-card.med{border-left:3px solid var(--blue)}
+.esc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.esc-name{font-size:13px;font-weight:700;color:var(--navy)}
+.esc-email2{font-size:11px;color:var(--text3)}
+.esc-prio{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.05em}
+.pc{background:#fff0eb;color:var(--orange);border:1px solid var(--orange-brd)}
+.ph{background:#fff8eb;color:#c9821a;border:1px solid rgba(201,130,26,.2)}
+.pm{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd)}
+.esc-snip{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px}
+.esc-foot{display:flex;align-items:center;justify-content:space-between}
+.esc-fcnt{font-size:11px;color:var(--text3)}
+.esc-acts{display:flex;gap:6px}
+
+/* TEMPLATES */
+#tab-tpl{display:none;flex:1;overflow-y:auto;padding:24px}
+.tpl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.tpl-ttl{font-size:18px;font-weight:700;color:var(--navy)}
+.btn-new{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-new:hover{background:var(--orange2)}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.tpl-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.tpl-ctop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.tpl-cname{font-size:13px;font-weight:700;color:var(--navy)}
+.tpl-clng{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.tpl-clng.en{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd)}
+.tpl-clng.ar{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-brd)}
+.tpl-prev{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tpl-acts{display:flex;gap:6px}
+.tpl-btn{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:6px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;text-align:center}
+.tpl-btn:hover{background:var(--bg2);color:var(--text)}
+.tpl-btn.use:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-bg)}
+
+/* SEARCH */
+#tab-srch{display:none;flex:1;overflow-y:auto;padding:24px}
+.srch-wrap{display:flex;gap:10px;margin-bottom:24px}
+.srch-box{flex:1;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:11px 16px;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.srch-box:focus{border-color:var(--blue)}
+.btn-srch{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:0 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-srch:hover{background:var(--navy2)}
+.sr-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;box-shadow:var(--shadow);transition:all .15s;margin-bottom:8px}
+.sr-card:hover{border-color:var(--blue-brd);box-shadow:var(--shadow2)}
+.sr-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.sr-sndr{font-size:13px;font-weight:600;color:var(--navy)}
+.sr-dt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.sr-subj{font-size:12px;color:var(--text2);margin-bottom:3px}
+.sr-snip{font-size:11px;color:var(--text3)}
+
+/* BOUNCES */
+#tab-bnc{display:none;flex:1;overflow-y:auto;padding:24px}
+.bnc-ttl{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.bnc-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+.bnc-sec{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:20px;display:flex;align-items:center;gap:8px}
+.bnc-sec::after{content:'';flex:1;height:1px;background:var(--border)}
+.bnc-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:8px}
+.bnc-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.bt-alias{background:#fff8eb;color:#c9821a;border:1px solid rgba(201,130,26,.25)}
+.bt-bad{background:#fff0eb;color:var(--orange);border:1px solid var(--orange-brd)}
+.bnc-addr{font-size:11px;color:var(--orange);font-family:'DM Mono',monospace;margin:6px 0}
+.bnc-fix{display:flex;gap:8px;align-items:center;margin-top:8px}
+.bnc-input{flex:1;background:var(--surface2);border:1.5px solid var(--border2);border-radius:7px;padding:8px 11px;font-size:12px;color:var(--text);outline:none;transition:border-color .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.bnc-input:focus{border-color:var(--orange)}
+
+/* MODALS */
+.modal-bg{position:fixed;inset:0;background:rgba(27,45,79,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500}
+.modal-bg.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;width:390px;box-shadow:0 20px 60px rgba(27,45,79,.2);max-height:80vh;overflow-y:auto}
+.modal-ttl{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--text2);margin-bottom:18px}
+.mlbl-grid{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+.mlbl-btn{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;cursor:pointer;transition:all .15s}
+.mlbl-btn:hover{border-color:var(--border2)}
+.mlbl-btn.sel{border-color:var(--orange);background:var(--orange-bg)}
+.mlbl-name{font-size:12px;font-weight:600;color:var(--text)}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px}
+.btn-cancel{background:none;border:1px solid var(--border2);border-radius:7px;padding:8px 16px;font-size:12px;color:var(--text2);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.btn-apply{background:var(--orange);color:#fff;border:none;border-radius:7px;padding:8px 20px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.modal.wide{width:520px}
+.fed{display:flex;flex-direction:column;gap:10px}
+.fed label{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:3px}
+.fed input,.fed select,.fed textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.fed input:focus,.fed select:focus,.fed textarea:focus{border-color:var(--orange)}
+.fed textarea{min-height:110px;resize:vertical}
+.bulk-list{max-height:190px;overflow-y:auto;margin-bottom:12px}
+.bulk-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
+.bulk-cb{accent-color:var(--orange);width:14px;height:14px}
+.bulk-name{font-size:12px;color:var(--text)}
+.bulk-eml{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+
+.notif{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 18px;font-size:13px;box-shadow:0 8px 32px rgba(27,45,79,.25);z-index:1000;transform:translateY(80px);opacity:0;transition:all .3s;max-width:300px}
+.notif.show{transform:translateY(0);opacity:1}
+.notif.success{background:#1a5c3a}
+.notif.error{background:#8b2020}
+.notif.info{background:#1a3d5c}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-state{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:40px;color:var(--text3)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+ <div class="auth-card">
+  <div class="brand-row"><div class="brand-num">1 9 3 2</div><div class="brand-word">PROJECT</div></div>
+  <div class="brand-bar"></div>
+  <div class="auth-title">Inbox <span>Chief of Staff</span></div>
+  <div class="auth-sub">Label, triage, bulk reply, fix bounces — all from one place. Powered by Gmail API + AI.</div>
+  <div class="auth-steps">
+   <div class="auth-step"><div class="step-num">1</div><div class="step-txt"><strong>Create Google Cloud project</strong> at <code>console.cloud.google.com</code> → Enable Gmail API → Create OAuth 2.0 Client ID (Web application).</div></div>
+   <div class="auth-step"><div class="step-num">2</div><div class="step-txt"><strong>Add authorised redirect URI:</strong> <code id="redir-display">loading...</code></div></div>
+   <div class="auth-step"><div class="step-num">3</div><div class="step-txt"><strong>Paste Client ID below</strong> and sign in with Google.</div></div>
+  </div>
+  <input class="auth-input" id="cid-input" type="text" placeholder="Google OAuth Client ID...">
+  <button class="btn-main" onclick="startOAuth()">Sign in with Google →</button>
+  <div class="auth-note">Runs entirely in your browser. No server. No data storage.</div>
+ </div>
+</div>
+
+<!-- SETUP -->
+<div id="setup-screen">
+ <div class="setup-card">
+  <div class="brand-row" style="margin-bottom:4px"><div class="brand-num" style="font-size:18px">1 9 3 2</div><div class="brand-word">PROJECT</div></div>
+  <div class="brand-bar" style="margin-bottom:18px"></div>
+  <div class="setup-title">Create your labels</div>
+  <div class="setup-desc">These 9 labels will be added to your Gmail account. Takes about 10 seconds.</div>
+  <div class="label-list" id="label-list"></div>
+  <div id="setup-progress" style="display:none;margin-bottom:16px">
+   <div class="progress-lbl" id="prog-lbl">Creating...</div>
+   <div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+  <button class="btn-navy" id="btn-setup" onclick="createAllLabels()">Create all labels & open app →</button>
+ </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+ <div class="topbar">
+  <div class="tb-num">1 9 3 2</div><div class="tb-word">PROJECT</div>
+  <div class="tb-div"></div>
+  <div class="tb-title">Inbox Chief of Staff</div>
+  <div class="tb-right">
+   <div class="tb-email" id="user-email">—</div>
+   <button class="tb-btn" onclick="signOut()">Sign out</button>
+  </div>
+ </div>
+ <div class="tabbar">
+  <div class="tab active" id="tb-dash" onclick="sw('dash')">📊 Dashboard</div>
+  <div class="tab" id="tb-inbox" onclick="sw('inbox')">✉️ Inbox <span class="tbadge grey" id="unread-badge">—</span></div>
+  <div class="tab" id="tb-esc" onclick="sw('esc')">🔴 Escalations <span class="tbadge" id="esc-badge">—</span></div>
+  <div class="tab" id="tb-tpl" onclick="sw('tpl')">📝 Templates</div>
+  <div class="tab" id="tb-srch" onclick="sw('srch')">🔍 Search</div>
+  <div class="tab" id="tb-bnc" onclick="sw('bnc')">⚠️ Bounce Fixer</div>
+ </div>
+ <div class="main-layout">
+
+  <!-- DASHBOARD -->
+  <div id="tab-dash" style="flex:1;overflow-y:auto;padding:24px">
+   <div class="dash-grid" id="stat-cards">
+    <div class="stat-card urg"><div class="stat-lbl">🔴 Escalations</div><div class="stat-val o" id="sv-esc">—</div><div class="stat-sub">Need urgent reply</div></div>
+    <div class="stat-card"><div class="stat-lbl">🤝 Intros</div><div class="stat-val" id="sv-intro">47</div><div class="stat-sub">Pairs not yet connected</div></div>
+    <div class="stat-card inf"><div class="stat-lbl">❓ Admissions</div><div class="stat-val b" id="sv-adm">—</div><div class="stat-sub">Status questions</div></div>
+    <div class="stat-card"><div class="stat-lbl">📭 Unread</div><div class="stat-val" id="sv-unread">—</div><div class="stat-sub">Total in inbox</div></div>
+    <div class="stat-card urg"><div class="stat-lbl">⚠️ Bounced</div><div class="stat-val o">50</div><div class="stat-sub">28 alias · 22 bad address</div></div>
+    <div class="stat-card"><div class="stat-lbl">🔧 BigSib Issues</div><div class="stat-val">8</div><div class="stat-sub">Wrong match / contact</div></div>
+   </div>
+   <div class="dash-sec">
+    <div class="dash-sec-title">Browse by category</div>
+    <div class="cat-grid" id="cat-grid"></div>
+   </div>
+   <div class="dash-sec">
+    <div class="dash-sec-title">Quick actions</div>
+    <div class="qa-row">
+     <button class="tbtn o" onclick="sw('esc')">🔴 Triage escalations</button>
+     <button class="tbtn b" onclick="openBulk()">⚡ Bulk AI reply</button>
+     <button class="tbtn" onclick="sw('bnc')">⚠️ Fix bounces</button>
+     <button class="tbtn" onclick="sw('tpl')">📝 Templates</button>
+    </div>
+   </div>
+  </div>
+
+  <!-- INBOX -->
+  <div id="tab-inbox" style="display:none;flex:1;overflow:hidden">
+   <div class="sidebar">
+    <div class="sb-head"><input class="sb-search" placeholder="Filter..." oninput="filterTL(this.value)"></div>
+    <div class="sb-nav" id="sb-nav"></div>
+    <div class="sb-actions">
+     <button class="sb-btn o" onclick="openBulk()">⚡ Bulk AI Reply</button>
+     <button class="sb-btn b" onclick="markAllRead()">✓ Mark all read</button>
+     <button class="sb-btn" onclick="refreshInbox()">↻ Refresh</button>
+    </div>
+   </div>
+   <div class="thread-panel">
+    <div class="tp-head">
+     <div class="tp-title" id="tp-title">Inbox</div>
+     <div class="tp-cnt" id="tp-cnt">—</div>
+    </div>
+    <div class="thread-list" id="thread-list"><div class="load-state"><div class="spinner"></div><div>Loading...</div></div></div>
+   </div>
+   <div class="email-view" id="email-view">
+    <div class="ev-empty" id="ev-empty"><div class="ei">✉️</div><div class="et">Select an email to read it</div></div>
+    <div id="ev-content" style="display:none;flex-direction:column;height:100%">
+     <div class="ev-top">
+      <div class="ev-subj" id="ev-subj">—</div>
+      <div class="ev-meta"><div class="ev-from" id="ev-from">—</div><div class="ev-time" id="ev-time">—</div></div>
+      <div class="ev-labels" id="ev-labels"></div>
+     </div>
+     <div class="ev-toolbar">
+      <button class="tbtn o" onclick="openLblModal()">⊕ Label</button>
+      <button class="tbtn" onclick="markRead()">✓ Read</button>
+      <button class="tbtn" onclick="markUnread()">● Unread</button>
+      <button class="tbtn b" onclick="openBulk()">⚡ Bulk reply</button>
+     </div>
+     <div class="ev-body" id="ev-body"></div>
+     <div class="reply-area">
+      <div class="reply-hdr">
+       <div class="reply-lbl">Reply</div>
+       <div><button class="btn-ai" id="btn-ai" onclick="genAI()">✦ Draft with AI</button></div>
+      </div>
+      <textarea class="reply-textarea" id="reply-ta" placeholder="Write your reply... or click ✦ Draft with AI"></textarea>
+      <div class="reply-foot">
+       <div class="reply-to" id="reply-to">—</div>
+       <div class="reply-btns">
+        <button class="tbtn" onclick="document.getElementById('reply-ta').value=''">Clear</button>
+        <button class="btn-send" id="btn-send" onclick="sendReply()">Send →</button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- ESCALATIONS -->
+  <div id="tab-esc" style="display:none;flex:1;overflow-y:auto;padding:24px">
+   <div class="esc-hdr">
+    <div><div class="esc-ttl">🔴 Escalation Queue</div><div class="esc-sub">Sorted by follow-up count — most neglected first</div></div>
+    <button class="btn-new" onclick="loadEsc()">↻ Refresh</button>
+   </div>
+   <div class="esc-list" id="esc-list"><div class="load-state"><div class="spinner"></div><div>Loading...</div></div></div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <div id="tab-tpl" style="display:none;flex:1;overflow-y:auto;padding:24px">
+   <div class="tpl-hdr"><div class="tpl-ttl">📝 Reply Templates</div><button class="btn-new" onclick="newTpl()">+ New Template</button></div>
+   <div class="tpl-grid" id="tpl-grid"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div id="tab-srch" style="display:none;flex:1;overflow-y:auto;padding:24px">
+   <div style="max-width:680px">
+    <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px">🔍 Participant Search</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Search by name, email, or keyword to find all threads related to a specific participant.</div>
+    <div class="srch-wrap">
+     <input class="srch-box" id="srch-input" placeholder="Name, email, or keyword..." onkeydown="if(event.key==='Enter')doSearch()">
+     <button class="btn-srch" onclick="doSearch()">Search</button>
+    </div>
+    <div id="srch-results"></div>
+   </div>
+  </div>
+
+  <!-- BOUNCE FIXER -->
+  <div id="tab-bnc" style="display:none;flex:1;overflow-y:auto;padding:24px">
+   <div class="bnc-ttl">⚠️ Bounce Fixer</div>
+   <div class="bnc-sub">Diagnose and fix failed email deliveries</div>
+   <div class="bnc-sec">Send-as Alias Error (28 bounces)</div>
+   <div id="alias-list"></div>
+   <div class="bnc-sec">Bad / Invalid Addresses (22 bounces)</div>
+   <div id="addr-list"></div>
+  </div>
+
+ </div>
+</div>
+
+<!-- LABEL MODAL -->
+<div class="modal-bg" id="lbl-modal">
+ <div class="modal">
+  <div class="modal-ttl">Apply label</div>
+  <div class="modal-sub">Choose a label for this thread</div>
+  <div class="mlbl-grid" id="mlbl-grid"></div>
+  <div class="modal-foot"><button class="btn-cancel" onclick="closeLbl()">Cancel</button><button class="btn-apply" onclick="applyLbl()">Apply</button></div>
+ </div>
+</div>
+
+<!-- TEMPLATE EDITOR MODAL -->
+<div class="modal-bg" id="tpl-modal">
+ <div class="modal">
+  <div class="modal-ttl" id="tpl-modal-ttl">New Template</div>
+  <div class="modal-sub">Create a reusable reply for common scenarios</div>
+  <div class="fed">
+   <div><label>Name</label><input id="fed-name" placeholder="e.g. BigSib notified"></div>
+   <div><label>Language</label><select id="fed-lang"><option value="en">English</option><option value="ar">Arabic (عربي)</option></select></div>
+   <div><label>Body</label><textarea id="fed-body" placeholder="Write your template..."></textarea></div>
+  </div>
+  <div class="modal-foot" style="margin-top:16px"><button class="btn-cancel" onclick="closeTpl()">Cancel</button><button class="btn-apply" onclick="saveTpl()">Save</button></div>
+ </div>
+</div>
+
+<!-- BULK REPLY MODAL -->
+<div class="modal-bg" id="bulk-modal">
+ <div class="modal wide">
+  <div class="modal-ttl">⚡ Bulk AI Reply</div>
+  <div class="modal-sub">Draft one reply and send to multiple threads at once</div>
+  <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Select threads:</div>
+  <div class="bulk-list" id="bulk-list"></div>
+  <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Reply message:</div>
+  <textarea class="reply-textarea" id="bulk-ta" style="min-height:80px;margin-bottom:8px" placeholder="Write or generate a reply..."></textarea>
+  <div style="display:flex;gap:8px;margin-bottom:16px"><button class="btn-ai" onclick="genBulk()">✦ Generate with AI</button></div>
+  <div class="modal-foot"><button class="btn-cancel" onclick="closeBulk()">Cancel</button><button class="btn-apply" id="btn-bulk-send" onclick="sendBulk()">Send to Selected →</button></div>
+ </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+const API='https://gmail.googleapis.com/gmail/v1';
+const SCOPES='https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.labels';
+const LABELS=[
+ {name:'🔴 Escalations',color:'#E85C2C',count:29},
+ {name:'🤝 Intros',color:'#2e9e6a',count:47},
+ {name:'❓ Admissions',color:'#4A9BC4',count:145},
+ {name:'⚠️ Bounced — Alias',color:'#c9821a',count:28},
+ {name:'📭 Bounced — Bad Address',color:'#8b5e3c',count:22},
+ {name:'📰 External',color:'#7a5cc0',count:8},
+ {name:'❌ Withdrawals',color:'#c03a6a',count:5},
+ {name:'🔧 BigSib Issues',color:'#1B2D4F',count:8},
+ {name:'✅ Mark Read',color:'#8fa8c0',count:546},
+];
+const BAD_ADDRS=['deema@dirwaza.sa','dillip.n.nalla@pwc.com','umberto.zucchello@strategyand.pwc.com','may.alqulays@strategyand.pwc.com','Mona.alsaydlani@neom.com','mjamjoom@emkaneducation.com','ankit.ak.sharma@strategyand.pwc.com','anas.chazal@strategyand.pwc.com','alwadie.shimaa@gamil.com','sarahalluhaidan24@gmail.con','tma53@cornell.edu','salblwi2@illinois.edu','seham.albalawi@protonmail.com','kha32@cornell.edu','bakur22@ucla.edu','althari@g.harvard.edu','meaigelg@pennlaw.upenn.edu','Alduhymish.m@gmail.com','aaalsudayri@bham.ac.uk','Mhyami@stc.com.sa','Iam@muhaitheef.info','mtamimi@cst.gov.sa'];
+const DEFAULT_TPLS=[
+ {id:'t1',name:'BigSib Notified',lang:'en',body:'Dear [Name],\n\nThank you for reaching out. We have contacted your BigSib and asked them to get in touch with you as soon as possible. We appreciate your patience.\n\nBest regards,\nProject 1932 Team'},
+ {id:'t2',name:'Waitlist Confirmed',lang:'en',body:'Dear [Name],\n\nThank you for your interest in Project 1932. You have been added to our waitlist for the next cohort and will be notified as soon as a spot becomes available.\n\nBest regards,\nProject 1932 Team'},
+ {id:'t3',name:'Reassignment In Progress',lang:'en',body:'Dear [Name],\n\nThank you for your patience. We are working on reassigning you to a new BigSib who will be a better fit. You will receive the introduction email within the next few days.\n\nBest regards,\nProject 1932 Team'},
+ {id:'t4',name:'تفاصيل البرنامج',lang:'ar',body:'عزيزي/عزيزتي [الاسم]،\n\nشكراً جزيلاً على تواصلكم معنا. سيبدأ البرنامج قريباً وستصلكم رسالة إلكترونية تتضمن جميع التفاصيل والخطوات القادمة.\n\nمع أطيب التحيات،\nفريق مشروع 1932'},
+ {id:'t5',name:'Acceptance Confirmed',lang:'en',body:'Dear [Name],\n\nWe are delighted to confirm your acceptance into Project 1932 Cohort 5. Welcome to the family! Detailed onboarding information will follow shortly.\n\nBest regards,\nProject 1932 Team'},
+ {id:'t6',name:'Contact Info Updated',lang:'en',body:'Dear [Name],\n\nThank you for the update. We have corrected the contact information and resent the introduction email. Please check your inbox and reach out to connect.\n\nBest regards,\nProject 1932 Team'},
+];
+
+let S={token:null,clientId:null,userEmail:null,labels:{},threads:[],currentThread:null,currentMsgs:[],activeNav:'Unread',activeQ:'in:inbox is:unread after:2025/06/01',templates:[...DEFAULT_TPLS],selLabel:null,editTpl:null};
+
+document.getElementById('redir-display').textContent=location.href.split('?')[0].split('#')[0];
+
+function startOAuth(){
+ const cid=document.getElementById('cid-input').value.trim();
+ if(!cid){notif('Enter your Client ID','error');return}
+ S.clientId=cid;localStorage.setItem('p1932_cid',cid);
+ const r=location.href.split('?')[0].split('#')[0];
+ const p=new URLSearchParams({client_id:cid,redirect_uri:r,response_type:'token',scope:SCOPES,prompt:'consent'});
+ location.href='https://accounts.google.com/o/oauth2/v2/auth?'+p;
+}
+
+function handleCb(){
+ const h=new URLSearchParams(location.hash.slice(1));
+ const t=h.get('access_token');
+ if(t){S.token=t;S.clientId=localStorage.getItem('p1932_cid');history.replaceState(null,'',location.pathname);return true}
+ return false;
+}
+
+function signOut(){S.token=null;localStorage.removeItem('p1932_cid');location.reload()}
+
+async function gapi(ep,opts={}){
+ const url=ep.startsWith('http')?ep:API+ep;
+ const res=await fetch(url,{...opts,headers:{Authorization:`Bearer ${S.token}`,'Content-Type':'application/json',...(opts.headers||{})}});
+ if(res.status===204)return{};
+ const d=await res.json();
+ if(!res.ok)throw new Error(d?.error?.message||'API error');
+ return d;
+}
+
+function hdr(m,n){return(m.payload?.headers||[]).find(h=>h.name.toLowerCase()===n.toLowerCase())?.value||''}
+
+function getBody(m){
+ function ex(p){if(p.mimeType==='text/plain'&&p.body?.data)return atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/'));if(p.parts)for(const q of p.parts){const t=ex(q);if(t)return t}return''}
+ if(m.payload?.body?.data)return atob(m.payload.body.data.replace(/-/g,'+').replace(/_/g,'/'));
+ return ex(m.payload||{});
+}
+
+function fmtD(ts){
+ const d=new Date(+ts),n=new Date(),df=(n-d)/1000;
+ if(df<86400&&d.getDate()===n.getDate())return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+ if(df<604800)return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+ return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function esc(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function notif(msg,type=''){
+ const el=document.getElementById('notif');
+ el.textContent=msg;el.className='notif show '+(type||'');
+ setTimeout(()=>el.className='notif',3500);
+}
+
+function getUserLabels(msgs){
+ const ids=new Set(msgs.flatMap(m=>m.labelIds||[]));
+ return LABELS.filter(l=>S.labels[l.name]&&ids.has(S.labels[l.name]));
+}
+
+// SETUP
+function renderSetup(){
+ document.getElementById('label-list').innerHTML=LABELS.map((l,i)=>`
+  <div class="label-row"><div class="label-row-l"><div class="ldot" style="background:${l.color}"></div><div class="lname">${l.name}</div><div class="lcount">~${l.count}</div></div><div class="lstatus ls-p" id="ls${i}">pending</div></div>`).join('');
+}
+
+async function createAllLabels(){
+ document.getElementById('btn-setup').disabled=true;
+ document.getElementById('setup-progress').style.display='block';
+ const d=await gapi('/users/me/labels');
+ for(const l of d.labels||[])S.labels[l.name]=l.id;
+ for(let i=0;i<LABELS.length;i++){
+  const l=LABELS[i],el=document.getElementById('ls'+i);
+  el.textContent='creating...';el.className='lstatus ls-c';
+  document.getElementById('prog-lbl').textContent=`Creating "${l.name}"...`;
+  document.getElementById('prog-fill').style.width=Math.round(i/LABELS.length*100)+'%';
+  try{if(!S.labels[l.name]){const r=await gapi('/users/me/labels',{method:'POST',body:JSON.stringify({name:l.name,labelListVisibility:'labelShow',messageListVisibility:'show'})});S.labels[l.name]=r.id}el.textContent='done';el.className='lstatus ls-d'}
+  catch{el.textContent='exists';el.className='lstatus ls-d'}
+  await new Promise(r=>setTimeout(r,250));
+ }
+ document.getElementById('prog-fill').style.width='100%';
+ document.getElementById('prog-lbl').textContent='All ready!';
+ await new Promise(r=>setTimeout(r,500));
+ await initApp();
+}
+
+// TAB SWITCHING
+function sw(name){
+ ['dash','inbox','esc','tpl','srch','bnc'].forEach(t=>{
+  document.getElementById('tb-'+t).classList.toggle('active',t===name);
+  const el=document.getElementById('tab-'+t);
+  if(el)el.style.display=t===name?(t==='inbox'?'flex':'block'):'none';
+ });
+ if(name==='esc')loadEsc();
+ if(name==='bnc')renderBounces();
+ if(name==='tpl')renderTemplates();
+}
+
+// DASHBOARD
+async function loadDash(){
+ try{const d=await gapi('/users/me/threads?q='+encodeURIComponent('in:inbox is:unread after:2025/06/01')+'&maxResults=1');const c=d.resultSizeEstimate||0;document.getElementById('sv-unread').textContent=c;document.getElementById('unread-badge').textContent=c}catch{}
+ try{const d=await gapi('/users/me/threads?q='+encodeURIComponent('in:inbox after:2025/06/01 ("follow up" OR "no response" OR "تذكير" OR "reassign")')+'&maxResults=1');const c=d.resultSizeEstimate||29;document.getElementById('sv-esc').textContent=c;document.getElementById('esc-badge').textContent=c}catch{document.getElementById('sv-esc').textContent='29';document.getElementById('esc-badge').textContent='29'}
+ try{const d=await gapi('/users/me/threads?q='+encodeURIComponent('in:inbox after:2025/06/01 (cohort OR "future round" OR enrollment)')+'&maxResults=1');document.getElementById('sv-adm').textContent=d.resultSizeEstimate||145}catch{}
+ const cats=[
+  {name:'🔴 Escalations',desc:'No BigSib response',count:29,color:'#E85C2C',q:'in:inbox ("follow up" OR "no response" OR "تذكير")'},
+  {name:'🤝 Intros',desc:'Pairs not connected',count:47,color:'#2e9e6a',q:'in:inbox ("looking forward" OR "excited to be matched")'},
+  {name:'❓ Admissions',desc:'Status questions',count:145,color:'#4A9BC4',q:'in:inbox (cohort OR "future round" OR enrollment)'},
+  {name:'📭 Bounced',desc:'Failed deliveries',count:50,color:'#c9821a',q:'in:inbox ("address not found" OR "message not delivered")'},
+  {name:'📰 External',desc:'Media & partners',count:8,color:'#7a5cc0',q:'in:inbox ("leadership by design" OR headshot OR research)'},
+  {name:'❌ Withdrawals',desc:'Opt-outs',count:5,color:'#c03a6a',q:'in:inbox (withdraw OR "unable to participate" OR اعتذر)'},
+  {name:'🔧 BigSib Issues',desc:'Wrong match / contact',count:8,color:'#1B2D4F',q:'in:inbox ("wrong" OR "mistake" OR "change my mentor")'},
+ ];
+ document.getElementById('cat-grid').innerHTML=cats.map(c=>`
+  <div class="cat-card" onclick="goInbox(${JSON.stringify(esc(c.name))},${JSON.stringify(esc(c.q))})">
+   <div class="cdot" style="background:${c.color}"></div>
+   <div class="cat-info"><div class="cat-name">${c.name}</div><div class="cat-desc">${c.desc}</div></div>
+   <div class="cat-cnt" style="color:${c.color}">${c.count}</div>
+  </div>`).join('');
+}
+
+function goInbox(name,q){sw('inbox');loadTL(decodeURIComponent(name.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"')),decodeURIComponent(q.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"')))}
+
+// SIDEBAR
+function renderSidebar(){
+ const items=[
+  {name:'All Inbox',q:'in:inbox after:2025/06/01',color:'#1B2D4F'},
+  {name:'Unread',q:'in:inbox is:unread after:2025/06/01',color:'#E85C2C'},
+  ...LABELS.map(l=>({name:l.name,q:`in:inbox after:2025/06/01`,color:l.color}))
+ ];
+ document.getElementById('sb-nav').innerHTML=`
+  <div class="nav-sec-lbl">Views</div>
+  ${items.slice(0,2).map((n,i)=>navItem(n,i===1)).join('')}
+  <div class="nav-sec-lbl" style="margin-top:8px">Labels</div>
+  ${items.slice(2).map(n=>navItem(n,false)).join('')}`;
+}
+
+function navItem(n,active){
+ return`<div class="nav-item ${active?'active':''}" data-name="${esc(n.name)}" data-q="${esc(n.q)}" onclick="selNav(this)">
+  <div class="nav-item-l"><div class="ndot" style="background:${n.color}"></div><div class="nname">${n.name}</div></div>
+ </div>`;
+}
+
+function selNav(el){
+ document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+ el.classList.add('active');
+ const name=el.dataset.name,q=el.dataset.q.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
+ loadTL(name,q);
+}
+
+function filterTL(v){
+ v=v.toLowerCase();
+ document.querySelectorAll('.ti').forEach(el=>el.style.display=el.dataset.s?.includes(v)?'':'none');
+}
+
+// THREAD LIST
+async function loadTL(name='Unread',q='in:inbox is:unread after:2025/06/01'){
+ S.activeNav=name;S.activeQ=q;
+ document.getElementById('tp-title').textContent=name;
+ document.getElementById('thread-list').innerHTML='<div class="load-state"><div class="spinner"></div><div>Loading...</div></div>';
+ try{
+  const data=await gapi(`/users/me/threads?q=${encodeURIComponent(q)}&maxResults=40`);
+  const threads=data.threads||[];
+  document.getElementById('tp-cnt').textContent=threads.length+' threads';
+  if(!threads.length){document.getElementById('thread-list').innerHTML='<div class="load-state">No emails found</div>';return}
+  const details=await Promise.all(threads.slice(0,30).map(t=>gapi(`/users/me/threads/${t.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`).catch(()=>null)));
+  S.threads=details.filter(Boolean);
+  renderTL(S.threads);
+ }catch(e){document.getElementById('thread-list').innerHTML=`<div class="load-state" style="color:var(--orange)">Error: ${e.message}</div>`}
+}
+
+function renderTL(threads){
+ document.getElementById('thread-list').innerHTML=threads.map(t=>{
+  const msgs=t.messages||[];if(!msgs.length)return'';
+  const last=msgs[msgs.length-1];
+  const from=hdr(last,'From').replace(/<.*>/,'').trim()||'Unknown';
+  const subj=hdr(last,'Subject')||'(no subject)';
+  const unread=msgs.some(m=>(m.labelIds||[]).includes('UNREAD'));
+  const uLabels=getUserLabels(msgs).slice(0,2);
+  const date=last.internalDate?fmtD(last.internalDate):'';
+  const s=(from+subj+(t.snippet||'')).toLowerCase();
+  const pl=unread?'padding-left:10px':'';
+  return`<div class="ti ${unread?'unread':''}" id="ti-${t.id}" data-s="${esc(s)}" onclick="openThread('${t.id}')">
+   ${unread?'<div class="unread-dot"></div>':''}
+   <div class="ti-top" style="${pl}"><div class="ti-sndr">${esc(from.substring(0,26))}</div><div class="ti-dt">${date}</div></div>
+   <div class="ti-subj" style="${pl}">${esc(subj.substring(0,54))}</div>
+   <div class="ti-snip" style="${pl}">${esc((t.snippet||'').substring(0,72))}</div>
+   ${uLabels.length?`<div class="ti-tags" style="${pl}">${uLabels.map(l=>`<span class="ti-tag" style="background:${l.color}18;color:${l.color};border:1px solid ${l.color}30">${l.name}</span>`).join('')}</div>`:''}
+  </div>`;
+ }).join('');
+}
+
+async function openThread(id){
+ document.querySelectorAll('.ti').forEach(el=>el.classList.remove('active'));
+ document.getElementById('ti-'+id)?.classList.add('active');
+ document.getElementById('ev-empty').style.display='none';
+ const ec=document.getElementById('ev-content');ec.style.display='flex';ec.style.flexDirection='column';ec.style.height='100%';
+ document.getElementById('ev-body').innerHTML='<div class="load-state"><div class="spinner"></div></div>';
+ try{
+  const thread=await gapi(`/users/me/threads/${id}?format=full`);
+  S.currentThread=thread;S.currentMsgs=thread.messages||[];
+  const msgs=S.currentMsgs,last=msgs[msgs.length-1];
+  const fromFull=hdr(last,'From');
+  const fromName=fromFull.replace(/<.*>/,'').trim()||fromFull;
+  const fromEmail=(fromFull.match(/<(.+)>/)||[])[1]||fromFull;
+  document.getElementById('ev-subj').textContent=hdr(last,'Subject')||'(no subject)';
+  document.getElementById('ev-from').innerHTML=`<strong>${esc(fromName)}</strong> &lt;${esc(fromEmail)}&gt;`;
+  document.getElementById('ev-time').textContent=last.internalDate?fmtD(last.internalDate):'';
+  renderEvLabels(id,msgs);
+  document.getElementById('ev-body').innerHTML=msgs.map(m=>{
+   const b=getBody(m).substring(0,3000);
+   const mn=hdr(m,'From').replace(/<.*>/,'').trim();
+   const me=(hdr(m,'From').match(/<(.+)>/)||[])[1]||hdr(m,'From');
+   return`<div class="msg-block">
+    <div class="msg-hdr"><div><div class="msg-name">${esc(mn)}</div><div class="msg-email">${esc(me)}</div></div><div class="msg-date">${m.internalDate?fmtD(m.internalDate):''}</div></div>
+    <div class="msg-body">${esc(b)}</div>
+   </div>`;
+  }).join('');
+  document.getElementById('reply-to').textContent=`To: ${fromEmail}`;
+  document.getElementById('reply-ta').value='';
+  if(msgs.some(m=>(m.labelIds||[]).includes('UNREAD'))){
+   await gapi(`/users/me/threads/${id}/modify`,{method:'POST',body:JSON.stringify({removeLabelIds:['UNREAD']})});
+   document.getElementById('ti-'+id)?.classList.remove('unread');
+   document.getElementById('ti-'+id)?.querySelector('.unread-dot')?.remove();
+  }
+ }catch(e){document.getElementById('ev-body').innerHTML=`<div style="padding:20px;color:var(--orange)">Error: ${e.message}</div>`}
+}
+
+function renderEvLabels(tid,msgs){
+ const ul=getUserLabels(msgs);
+ document.getElementById('ev-labels').innerHTML=
+  ul.map(l=>`<span class="elbl" style="background:${l.color}18;color:${l.color};border:1px solid ${l.color}30" onclick="removeL('${tid}','${esc(l.name)}')">${l.name} ×</span>`).join('')+
+  `<span class="elbl-add" onclick="openLblModal()">+ label</span>`;
+}
+
+async function markRead(){if(!S.currentThread)return;try{await gapi(`/users/me/threads/${S.currentThread.id}/modify`,{method:'POST',body:JSON.stringify({removeLabelIds:['UNREAD']})});document.getElementById('ti-'+S.currentThread.id)?.classList.remove('unread');notif('Marked as read','success')}catch(e){notif('Error: '+e.message,'error')}}
+async function markUnread(){if(!S.currentThread)return;try{await gapi(`/users/me/threads/${S.currentThread.id}/modify`,{method:'POST',body:JSON.stringify({addLabelIds:['UNREAD']})});notif('Marked as unread')}catch(e){notif('Error: '+e.message,'error')}}
+
+async function markAllRead(){
+ const items=document.querySelectorAll('.ti.unread');
+ if(!items.length){notif('No unread in this view','info');return}
+ notif(`Marking ${items.length} as read...`,'info');
+ for(const el of items){try{await gapi(`/users/me/threads/${el.id.replace('ti-','')}/modify`,{method:'POST',body:JSON.stringify({removeLabelIds:['UNREAD']})});el.classList.remove('unread');el.querySelector('.unread-dot')?.remove()}catch{}}
+ notif(`Marked ${items.length} as read`,'success');
+}
+
+async function refreshInbox(){await loadTL(S.activeNav,S.activeQ)}
+
+// LABEL MODAL
+function openLblModal(){
+ S.selLabel=null;
+ document.getElementById('mlbl-grid').innerHTML=LABELS.map(l=>`
+  <div class="mlbl-btn" onclick="selLbl(this,'${esc(l.name)}')">
+   <div class="ndot" style="background:${l.color}"></div>
+   <div class="mlbl-name">${l.name}</div>
+  </div>`).join('');
+ document.getElementById('lbl-modal').classList.add('show');
+}
+function selLbl(el,name){document.querySelectorAll('.mlbl-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');S.selLabel=name}
+function closeLbl(){document.getElementById('lbl-modal').classList.remove('show')}
+async function applyLbl(){
+ if(!S.selLabel||!S.currentThread)return;
+ const lid=S.labels[S.selLabel];if(!lid){notif('Label not found','error');return}
+ try{await gapi(`/users/me/threads/${S.currentThread.id}/modify`,{method:'POST',body:JSON.stringify({addLabelIds:[lid]})});notif(`Applied "${S.selLabel}"`,'success');closeLbl();renderEvLabels(S.currentThread.id,S.currentMsgs)}
+ catch(e){notif('Error: '+e.message,'error')}
+}
+async function removeL(tid,name){
+ const lid=S.labels[name];if(!lid)return;
+ try{await gapi(`/users/me/threads/${tid}/modify`,{method:'POST',body:JSON.stringify({removeLabelIds:[lid]})});notif(`Removed "${name}"`);openThread(tid)}
+ catch(e){notif('Error: '+e.message,'error')}
+}
+
+// AI REPLY
+async function genAI(taId='reply-ta',btnId='btn-ai'){
+ if(!S.currentThread||!S.currentMsgs.length)return;
+ const b=document.getElementById(btnId);b.textContent='✦ Drafting...';b.disabled=true;
+ const last=S.currentMsgs[S.currentMsgs.length-1];
+ const ctx=S.currentMsgs.slice(-3).map(m=>`From: ${hdr(m,'From')}\n${getBody(m).substring(0,600)}`).join('\n---\n');
+ try{
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You draft replies for the Project 1932 team (project1932sa@gmail.com). Project 1932 is a Saudi mentorship program matching LittleSibs (young Saudis) with BigSibs (experienced professionals). Write professional, warm, concise replies in the same language the sender used (Arabic or English). 3–5 sentences unless more detail is needed. Output only the reply body — no greeting, no sign-off.',messages:[{role:'user',content:`Draft a reply to this thread:\n\nSubject: ${hdr(last,'Subject')}\nFrom: ${hdr(last,'From')}\n\n${ctx}`}]})});
+  const d=await res.json();
+  document.getElementById(taId).value=d.content?.[0]?.text||'';
+ }catch(e){notif('AI draft failed: '+e.message,'error')}
+ b.textContent='✦ Draft with AI';b.disabled=false;
+}
+
+// SEND
+async function sendReply(){
+ if(!S.currentThread||!S.currentMsgs.length)return;
+ const body=document.getElementById('reply-ta').value.trim();
+ if(!body){notif('Reply is empty','error');return}
+ const last=S.currentMsgs[S.currentMsgs.length-1];
+ const to=(hdr(last,'From').match(/<(.+)>/)||[])[1]||hdr(last,'From');
+ const subj=hdr(last,'Subject');
+ const rs=subj.startsWith('Re:')?subj:'Re: '+subj;
+ const btn=document.getElementById('btn-send');btn.disabled=true;btn.textContent='Sending...';
+ try{
+  const mime=[`To: ${to}`,`Subject: ${rs}`,'Content-Type: text/plain; charset=utf-8','',body].join('\r\n');
+  const raw=btoa(unescape(encodeURIComponent(mime))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  await gapi('/users/me/messages/send',{method:'POST',body:JSON.stringify({raw,threadId:S.currentThread.id})});
+  document.getElementById('reply-ta').value='';
+  notif('Sent ✓','success');
+ }catch(e){notif('Send failed: '+e.message,'error')}
+ btn.disabled=false;btn.textContent='Send →';
+}
+
+// ESCALATIONS
+async function loadEsc(){
+ document.getElementById('esc-list').innerHTML='<div class="load-state"><div class="spinner"></div><div>Loading escalations...</div></div>';
+ try{
+  const data=await gapi('/users/me/threads?q='+encodeURIComponent('in:inbox after:2025/06/01 ("follow up" OR "no response" OR "not yet received" OR "did not hear" OR "تذكير" OR "reassign" OR "gentle reminder" OR "kind reminder" OR "لازلت في انتظار")')+'&maxResults=40');
+  const threads=data.threads||[];
+  const details=await Promise.all(threads.slice(0,25).map(t=>gapi(`/users/me/threads/${t.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`).catch(()=>null)));
+  const valid=details.filter(Boolean).sort((a,b)=>(b.messages?.length||0)-(a.messages?.length||0));
+  document.getElementById('esc-list').innerHTML=valid.map(t=>{
+   const msgs=t.messages||[];if(!msgs.length)return'';
+   const last=msgs[msgs.length-1];
+   const from=hdr(last,'From');
+   const name=from.replace(/<.*>/,'').trim();
+   const email=(from.match(/<(.+)>/)||[])[1]||from;
+   const subj=hdr(last,'Subject')||'(no subject)';
+   const cnt=msgs.length;
+   const prio=cnt>=4?'crit':cnt>=3?'high':'med';
+   const plbl=cnt>=4?'CRITICAL':cnt>=3?'HIGH':'MEDIUM';
+   const pcls=cnt>=4?'pc':cnt>=3?'ph':'pm';
+   const date=last.internalDate?fmtD(last.internalDate):'';
+   return`<div class="esc-card ${prio}" onclick="openEsc('${t.id}')">
+    <div class="esc-top">
+     <div><div class="esc-name">${esc(name)}</div><div class="esc-email2">${esc(email)}</div></div>
+     <div class="esc-prio ${pcls}">${plbl}</div>
+    </div>
+    <div class="esc-snip">${esc(subj)}</div>
+    <div class="esc-foot">
+     <div class="esc-fcnt">↩ ${cnt} message${cnt>1?'s':''} · ${date}</div>
+     <div class="esc-acts">
+      <button class="tbtn o" onclick="event.stopPropagation();openEsc('${t.id}')">Reply</button>
+      <button class="tbtn" onclick="event.stopPropagation();qRead('${t.id}')">✓ Read</button>
+     </div>
+    </div>
+   </div>`;
+  }).join('')||'<div class="load-state">No escalations found</div>';
+ }catch(e){document.getElementById('esc-list').innerHTML=`<div class="load-state" style="color:var(--orange)">Error: ${e.message}</div>`}
+}
+
+function openEsc(id){sw('inbox');openThread(id)}
+async function qRead(id){try{await gapi(`/users/me/threads/${id}/modify`,{method:'POST',body:JSON.stringify({removeLabelIds:['UNREAD']})});notif('Marked as read','success')}catch{notif('Error','error')}}
+
+// TEMPLATES
+function renderTemplates(){
+ document.getElementById('tpl-grid').innerHTML=S.templates.map(t=>`
+  <div class="tpl-card">
+   <div class="tpl-ctop"><div class="tpl-cname">${esc(t.name)}</div><div class="tpl-clng ${t.lang}">${t.lang==='ar'?'AR عربي':'EN'}</div></div>
+   <div class="tpl-prev">${esc(t.body)}</div>
+   <div class="tpl-acts">
+    <button class="tpl-btn use" onclick="useTpl('${t.id}')">Use in reply</button>
+    <button class="tpl-btn" onclick="editTpl('${t.id}')">Edit</button>
+    <button class="tpl-btn" onclick="delTpl('${t.id}')">Delete</button>
+   </div>
+  </div>`).join('');
+}
+
+function useTpl(id){const t=S.templates.find(x=>x.id===id);if(!t)return;sw('inbox');setTimeout(()=>{document.getElementById('reply-ta').value=t.body;notif(`Template "${t.name}" loaded`)},100)}
+function newTpl(){S.editTpl=null;document.getElementById('tpl-modal-ttl').textContent='New Template';document.getElementById('fed-name').value='';document.getElementById('fed-lang').value='en';document.getElementById('fed-body').value='';document.getElementById('tpl-modal').classList.add('show')}
+function editTpl(id){const t=S.templates.find(x=>x.id===id);if(!t)return;S.editTpl=id;document.getElementById('tpl-modal-ttl').textContent='Edit Template';document.getElementById('fed-name').value=t.name;document.getElementById('fed-lang').value=t.lang;document.getElementById('fed-body').value=t.body;document.getElementById('tpl-modal').classList.add('show')}
+function saveTpl(){
+ const name=document.getElementById('fed-name').value.trim();
+ const lang=document.getElementById('fed-lang').value;
+ const body=document.getElementById('fed-body').value.trim();
+ if(!name||!body){notif('Name and body required','error');return}
+ if(S.editTpl){const t=S.templates.find(x=>x.id===S.editTpl);if(t){t.name=name;t.lang=lang;t.body=body}}
+ else S.templates.push({id:'t'+Date.now(),name,lang,body});
+ closeTpl();renderTemplates();notif('Template saved','success');
+}
+function delTpl(id){S.templates=S.templates.filter(t=>t.id!==id);renderTemplates();notif('Deleted')}
+function closeTpl(){document.getElementById('tpl-modal').classList.remove('show')}
+
+// SEARCH
+async function doSearch(){
+ const q=document.getElementById('srch-input').value.trim();if(!q)return;
+ document.getElementById('srch-results').innerHTML='<div class="load-state"><div class="spinner"></div><div>Searching...</div></div>';
+ try{
+  const data=await gapi('/users/me/threads?q='+encodeURIComponent('in:inbox after:2025/06/01 '+q)+'&maxResults=30');
+  const threads=data.threads||[];
+  if(!threads.length){document.getElementById('srch-results').innerHTML='<div class="load-state">No results found</div>';return}
+  const details=await Promise.all(threads.slice(0,20).map(t=>gapi(`/users/me/threads/${t.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`).catch(()=>null)));
+  document.getElementById('srch-results').innerHTML=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">${threads.length} threads found</div>`+
+   details.filter(Boolean).map(t=>{
+    const msgs=t.messages||[];if(!msgs.length)return'';
+    const last=msgs[msgs.length-1];
+    const from=hdr(last,'From').replace(/<.*>/,'').trim();
+    const subj=hdr(last,'Subject')||'(no subject)';
+    const date=last.internalDate?fmtD(last.internalDate):'';
+    return`<div class="sr-card" onclick="sw('inbox');openThread('${t.id}')">
+     <div class="sr-top"><div class="sr-sndr">${esc(from)}</div><div class="sr-dt">${date}</div></div>
+     <div class="sr-subj">${esc(subj)}</div>
+     <div class="sr-snip">${esc((t.snippet||'').substring(0,100))}</div>
+    </div>`;
+   }).join('');
+ }catch(e){document.getElementById('srch-results').innerHTML=`<div class="load-state" style="color:var(--orange)">Error: ${e.message}</div>`}
+}
+
+// BOUNCE FIXER
+function renderBounces(){
+ document.getElementById('alias-list').innerHTML=`
+  <div class="bnc-card">
+   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="bnc-type bt-alias">⚠️ ALIAS ERROR</span><span style="font-size:12px;color:var(--text2)">28 failed sends from team@project1932.org</span></div>
+   <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
+    <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">How to fix:</div>
+    <ol style="font-size:12px;color:var(--text2);line-height:1.9;padding-left:16px">
+     <li>Gmail → Settings (⚙️) → See all settings → Accounts → "Send mail as"</li>
+     <li>Click "edit info" next to <strong>team@project1932.org</strong></li>
+     <li>Re-enter SMTP credentials or remove and re-add the alias</li>
+     <li>Once fixed, retry sending from affected threads manually</li>
+    </ol>
+   </div>
+  </div>`;
+ document.getElementById('addr-list').innerHTML=BAD_ADDRS.map(addr=>`
+  <div class="bnc-card">
+   <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="bnc-type bt-bad">📭 UNDELIVERABLE</span></div>
+   <div class="bnc-addr">${esc(addr)}</div>
+   <div class="bnc-fix">
+    <input class="bnc-input" id="fix-${btoa(addr).replace(/[+/=]/g,'')}" placeholder="Enter correct email..." value="${sugFix(addr)}">
+    <button class="tbtn o" onclick="resend('${esc(addr)}')">Resend →</button>
+   </div>
+  </div>`).join('');
+}
+
+function sugFix(a){if(a.includes('gamil.com'))return a.replace('gamil.com','gmail.com');if(a.includes('gmail.con'))return a.replace('gmail.con','gmail.com');return''}
+
+async function resend(orig){
+ const key=btoa(orig).replace(/[+/=]/g,'');
+ const fixed=document.getElementById('fix-'+key)?.value.trim();
+ if(!fixed||!fixed.includes('@')){notif('Enter a valid email address','error');return}
+ try{
+  const mime=[`To: ${fixed}`,`Subject: Re: Project 1932 — Resending (address corrected)`,'Content-Type: text/plain; charset=utf-8','',`Dear participant,\n\nWe recently sent you an email but it was returned as undeliverable. We are resending to your corrected address.\n\nPlease reach out if you have any questions.\n\nBest regards,\nProject 1932 Team`].join('\r\n');
+  const raw=btoa(unescape(encodeURIComponent(mime))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  await gapi('/users/me/messages/send',{method:'POST',body:JSON.stringify({raw})});
+  notif(`Resent to ${fixed}`,'success');
+ }catch(e){notif('Send failed: '+e.message,'error')}
+}
+
+// BULK REPLY
+function openBulk(){
+ document.getElementById('bulk-list').innerHTML=S.threads.slice(0,20).map(t=>{
+  const msgs=t.messages||[];if(!msgs.length)return'';
+  const last=msgs[msgs.length-1];
+  const from=hdr(last,'From').replace(/<.*>/,'').trim()||'Unknown';
+  const email=(hdr(last,'From').match(/<(.+)>/)||[])[1]||hdr(last,'From');
+  return`<div class="bulk-item">
+   <input type="checkbox" class="bulk-cb" id="bc-${t.id}" value="${t.id}" data-email="${esc(email)}" data-name="${esc(from)}">
+   <label for="bc-${t.id}" style="cursor:pointer;flex:1;display:flex;gap:8px;align-items:center">
+    <span class="bulk-name">${esc(from.substring(0,22))}</span>
+    <span class="bulk-eml">${esc(email.substring(0,28))}</span>
+   </label>
+  </div>`;
+ }).join('')||'<div style="padding:12px;color:var(--text3);font-size:12px">Load an inbox view first</div>';
+ document.getElementById('bulk-ta').value='';
+ document.getElementById('bulk-modal').classList.add('show');
+}
+
+async function genBulk(){
+ document.getElementById('bulk-ta').value='Generating...';
+ try{
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:'Write a professional, warm bulk reply for the Project 1932 team. 4–5 sentences. Body only, no greeting, no sign-off.',messages:[{role:'user',content:'Draft a bulk reply for Project 1932 participants who have been waiting for an update. Acknowledge the wait, assure them things are progressing, thank them for patience.'}]})});
+  const d=await res.json();document.getElementById('bulk-ta').value=d.content?.[0]?.text||'';
+ }catch(e){notif('AI draft failed','error');document.getElementById('bulk-ta').value=''}
+}
+
+async function sendBulk(){
+ const checked=[...document.querySelectorAll('.bulk-cb:checked')];
+ const body=document.getElementById('bulk-ta').value.trim();
+ if(!checked.length){notif('Select at least one thread','error');return}
+ if(!body){notif('Write a reply first','error');return}
+ const btn=document.getElementById('btn-bulk-send');btn.disabled=true;btn.textContent='Sending...';
+ let sent=0;
+ for(const cb of checked){
+  try{
+   const mime=[`To: ${cb.dataset.email}`,`Subject: Re: Project 1932`,'Content-Type: text/plain; charset=utf-8','',body].join('\r\n');
+   const raw=btoa(unescape(encodeURIComponent(mime))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+   await gapi('/users/me/messages/send',{method:'POST',body:JSON.stringify({raw,threadId:cb.value})});
+   sent++;
+  }catch{}
+ }
+ btn.disabled=false;btn.textContent='Send to Selected →';
+ closeBulk();notif(`Sent to ${sent} of ${checked.length} threads`,'success');
+}
+
+function closeBulk(){document.getElementById('bulk-modal').classList.remove('show')}
+
+// INIT
+async function initApp(){
+ document.getElementById('auth-screen').style.display='none';
+ document.getElementById('setup-screen').style.display='none';
+ document.getElementById('app').style.display='flex';
+ try{
+  const p=await gapi('/users/me/profile');
+  S.userEmail=p.emailAddress;
+  document.getElementById('user-email').textContent=S.userEmail;
+  const ld=await gapi('/users/me/labels');
+  for(const l of ld.labels||[])S.labels[l.name]=l.id;
+  if(!LABELS.every(l=>S.labels[l.name])){
+   document.getElementById('app').style.display='none';
+   document.getElementById('setup-screen').style.display='flex';
+   renderSetup();return;
+  }
+  renderSidebar();
+  renderTemplates();
+  await loadDash();
+  await loadTL('Unread','in:inbox is:unread after:2025/06/01');
+  document.querySelectorAll('.nav-item').forEach(el=>{if(el.dataset.name==='Unread')el.classList.add('active')});
+ }catch(e){
+  notif('Error: '+e.message,'error');
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+ }
+}
+
+window.addEventListener('load',async()=>{
+ const saved=localStorage.getItem('p1932_cid');
+ if(saved)document.getElementById('cid-input').value=saved;
+ if(handleCb())await initApp();
+ else document.getElementById('auth-screen').style.display='flex';
+});
+</script>
+</body>
+</html>
